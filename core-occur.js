@@ -7,6 +7,7 @@ import { evalCond } from './core-cond.js';
 import { addDays, weekStart, toMin, fromMin, today, D } from './core-dates.js';
 import { flagsOf } from './core-flags.js';
 import { nextBirthday } from './birthdays-model.js';
+import { occDate } from './holidays-model.js';
 
 let dayCache = new Map(), weekCache = new Map();
 export function resetOccurCache() { rotCache.clear(); flagDayCache.clear(); dayCache = new Map(); weekCache = new Map(); afterCache.clear(); }
@@ -14,7 +15,7 @@ export function resetOccurCache() { rotCache.clear(); flagDayCache.clear(); dayC
 /** Подходит ли день задаче без учёта лимита в неделю. */
 function baseMatch(t, ds) {
   if (t.archived) return false;
-  if ((t.kind === 'once' || t.kind === 'event') && t.ctx && !t.date && t.ctx !== 'work') return !t.done && ds === planDate(t); // «на ближайшую дачу»
+  if ((t.kind === 'once' || t.kind === 'event') && !t.date && (t.occ || t.bday || (t.ctx && t.ctx !== 'work'))) return !t.done && ds === planDate(t); // «на ближайшую дачу», «за 14 дней до Нового года»
   if (t.kind === 'once' || t.kind === 'event') return t.date === ds;
   if (t.kind === 'span') return ds >= t.date && ds <= (t.end || t.date);
   if (t.kind !== 'repeat') return false;
@@ -354,7 +355,7 @@ export function rotZone(t, orig) {
 /** Название дела в календаре (с зоной уборки). */
 const offDay = i => flagsOf(i.ds).has('my_off');
 /** Название на день: у серий с разными буднями/выходными — пометка (labelWk / labelOff), у уборки — зона. */
-export const itemTitle = i => !i.task ? '' : i.withWalk ? itemTitle({ ...i, withWalk: false }) + ' + прогулка 🚶' : i.sub ? '↳ ' + i.sub.title + ' — для «' + i.task.title + '»' : (i.task.labelWk || i.task.labelOff) ? i.task.title + ' · ' + (offDay(i) ? i.task.labelOff : i.task.labelWk) : i.task.title + (rotZone(i.task, i.orig) ? ': ' + rotZone(i.task, i.orig).toLowerCase() : '');
+export const itemTitle = i => !i.task ? '' : i.task.shop && !i.sub ? '🛒 ' + i.task.title : i.withWalk ? itemTitle({ ...i, withWalk: false }) + ' + прогулка 🚶' : i.sub ? '↳ ' + i.sub.title + ' — для «' + i.task.title + '»' : (i.task.labelWk || i.task.labelOff) ? i.task.title + ' · ' + (offDay(i) ? i.task.labelOff : i.task.labelWk) : i.task.title + (rotZone(i.task, i.orig) ? ': ' + rotZone(i.task, i.orig).toLowerCase() : '');
 /** Цвет на день: будни — colorWk, выходные — colorOff (спорт, время с дочкой). */
 export const itemColor = (i, base) => i.task && (i.task.colorWk || i.task.colorOff) ? (offDay(i) ? i.task.colorOff : i.task.colorWk) || base : base;
 
@@ -367,8 +368,15 @@ export function nextFlagDay(flag, from = today()) {
 }
 /** Дата дела из планировщика: своя или ближайший день его признака. */
 export function planDate(t) {
-  if (t.date || !t.ctx || t.ctx === 'work') return t.date || null;
+  if (t.date) return t.date;
+  // к празднику или дню рождения: «за N дней до»; если срок уже прошёл — на сегодня
+  const lead = d => { if (!d) return null; const x = addDays(d, -(+t.before || 0)); return x < today() && !t.done ? today() : x; };
+  if (t.occ) { const o = (state.meta.occasions || []).find(x => x.id === t.occ); return o ? lead(occDate(o)) : null; }
+  if (t.bday) { const b = state.birthdays.find(x => x.id === t.bday); return b ? lead(nextBirthday(b).ds) : null; }
+  if (!t.ctx || t.ctx === 'work') return null;
+  // покупка к даче/отпуску — накануне ближайшего такого дня
+  if (t.shop) { const d = nextFlagDay(t.ctx, addDays(today(), 1)); return d ? addDays(d, -1) : null; }
   // ближайший такой день, до которого успеваем сделать подготовку («купить краску за 2 дня»)
-  const lead = Math.max(0, ...(t.subs || []).filter(s => !s.done).map(s => +s.before || 0));
-  return nextFlagDay(t.ctx, addDays(today(), lead));
+  const prep = Math.max(0, ...(t.subs || []).filter(s => !s.done).map(s => +s.before || 0));
+  return nextFlagDay(t.ctx, addDays(today(), prep));
 }

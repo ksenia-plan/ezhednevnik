@@ -244,3 +244,13 @@ details.od summary{cursor:pointer;font-weight:700;color:var(--danger);font-size:
 details.od .list{margin-top:8px}
 details.meet summary{cursor:pointer;list-style:none}details.meet[open] summary{margin-bottom:8px}
 [data-drag]{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+/* покупки и праздники */
+.sh-list{display:flex;flex-direction:column}
+.sh-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.sh-row:last-child{border-bottom:0}
+.sh-row .grow{cursor:pointer;min-width:0}
+.sh-row .t{font-weight:650;overflow-wrap:anywhere}
+.sh-row .m{font-size:12px;color:var(--muted)}
+.sh-row.done .t{text-decoration:line-through;color:var(--muted)}
+.card.occ .bar{height:6px;border-radius:3px;background:var(--sunk);overflow:hidden}
+.card.occ .bar i{display:block;height:100%;background:var(--accent)}

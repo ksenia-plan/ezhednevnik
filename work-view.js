@@ -22,7 +22,7 @@ const ui = { ctx: 'work', view: 'matrix', q: 'all', status: 'open' };
 export const setCtx = id => { ui.ctx = id; };
 const ctxOf = id => CTX.find(c => c.id === id) || CTX[0];
 
-const ctxTasks = () => state.tasks.filter(t => !t.archived && t.kind === 'once' && (ui.ctx === 'work' ? (t.ctx === 'work' || (!t.ctx && t.cat === 'work')) : t.ctx === ui.ctx));
+const ctxTasks = () => state.tasks.filter(t => !t.archived && !t.shop && t.kind === 'once' && (ui.ctx === 'work' ? (t.ctx === 'work' || (!t.ctx && t.cat === 'work')) : t.ctx === ui.ctx));
 function filtered() {
   return ctxTasks().filter(t => (ui.status === 'all' || (ui.status === 'open' ? !t.done : t.done)) && (ui.q === 'all' || quadOf(t).id === ui.q))
     .sort((a, b) => (planDate(a) || '9999').localeCompare(planDate(b) || '9999') || (a.time || '').localeCompare(b.time || ''));
@@ -37,6 +37,7 @@ export function render() {
   const qi = t => `<div class="qi ${t.done ? 'done' : ''}" data-drag="${t.id}" data-act="pItem" data-id="${t.id}">${esc(t.title)}<span class="hint"> · ${esc(whenTxt(t))}${subsTxt(t)}</span></div>`;
   return `<h1>Планы</h1>
   <div class="chips ctx">${CTX.map(x => `<button class="chip" data-act="pCtx" data-v="${x.id}" aria-pressed="${ui.ctx === x.id}">${x.icon} ${x.name} <small>${state.tasks.filter(t => !t.archived && !t.done && t.kind === 'once' && (x.id === 'work' ? (t.ctx === 'work' || (!t.ctx && t.cat === 'work')) : t.ctx === x.id)).length}</small></button>`).join('')}</div>
+  ${ui.ctx !== 'work' ? (() => { const n = state.tasks.filter(t => !t.archived && !t.done && t.shop && t.ctx === ui.ctx).length + state.tasks.filter(t => t.ctx === ui.ctx && !t.archived).flatMap(t => (t.subs || []).filter(x => x.buy && !x.done)).length; return `<button class="chip" data-act="nav" data-v="shop">🛒 Покупки ${esc(CTX.find(x => x.id === ui.ctx).name.toLowerCase() === 'дача' ? 'к даче' : 'к этому')}: ${n} ›</button>`; })() : ''}
   <span class="hint">${c.icon} ${c.hint}${ui.ctx !== 'work' ? ` · ${nd ? 'ближайший день: <b>' + esc(fmtDay(nd)) + '</b>' : 'таких дней в календаре пока нет — отметь их в «Признаки дня»'}` : ''}</span>
   <div class="card"><textarea id="w-in" class="inp" rows="2" placeholder="${ui.ctx === 'dacha' ? 'Покрасить стены; важно поправить забор' : 'Что нужно сделать: «важно завтра в 10 созвон по ТЗ 1 ч; срочно отчёт к пятнице»'}"></textarea>
     <div class="row between"><div class="row">${speechSupported() ? '<button class="btn ghost" data-act="wMic" id="w-mic" aria-label="Сказать голосом">🎤</button>' : ''}<button class="btn" data-act="wAdd">Добавить в «${esc(c.name)}»</button></div></div>
@@ -76,19 +77,20 @@ on('wItem', (d, el) => { if (el.dataset.justDragged) return; planSheet(d.id); })
 export function planSheet(id) {
   const t = getTask(id); if (!t) return;
   const auto = t.ctx && t.ctx !== 'work';
-  const subRow = s => `<div class="sub-row ${s.done ? 'done' : ''}"><input type="checkbox" class="check" data-s="done" data-sid="${s.id}" ${s.done ? 'checked' : ''} aria-label="Сделано"><span class="grow">${esc(s.title)}</span><span class="hint">${s.before ? 'за ' + s.before + ' дн.' : 'в тот же день'} · ${esc(fmtDay(addDays(planDate(t) || today(), -(+s.before || 0))))}</span><button class="x" data-s="del" data-sid="${s.id}" aria-label="Удалить">×</button></div>`;
+  const subRow = s => `<div class="sub-row ${s.done ? 'done' : ''}"><input type="checkbox" class="check" data-s="done" data-sid="${s.id}" ${s.done ? 'checked' : ''} aria-label="Сделано"><span class="grow">${s.buy ? '🛒 ' : ''}${esc(s.title)}</span><span class="hint">${s.before ? 'за ' + s.before + ' дн.' : 'в тот же день'} · ${esc(fmtDay(addDays(planDate(t) || today(), -(+s.before || 0))))}</span><button class="x" data-s="del" data-sid="${s.id}" aria-label="Удалить">×</button></div>`;
   const sh = openSheet(`<h3>${esc(t.title)}</h3><span class="hint">${esc(ctxOf(t.ctx || 'work').icon + ' ' + ctxOf(t.ctx || 'work').name)} · ${esc(whenTxt(t))}</span>
     <h2>Квадрант</h2><div class="chips sm">${QUADS.map(q => `<button class="chip" data-s="q" data-v="${q.id}" aria-pressed="${quadOf(t).id === q.id}" style="border-color:${q.c}">${q.name}</button>`).join('')}</div>
     <h2>Когда</h2><div class="fields"><label class="field">Дата${auto ? ' (пусто — ближайший день)' : ''}<input type="date" id="pl-d" value="${esc(t.date || '')}"></label><label class="field">Время<input type="time" id="pl-t" value="${esc(t.time || '')}"></label><label class="field">Минут<input type="number" id="pl-dur" min="5" step="5" value="${+t.dur || 30}"></label></div>
     <h2>Подзадачи</h2><div class="subs">${(t.subs || []).map(subRow).join('') || '<span class="hint">Например: «купить краску» за 2 дня до.</span>'}</div>
     <div class="fields"><label class="field grow">Подзадача<input id="pl-st" placeholder="Купить краску"></label><label class="field">За дней до<input type="number" id="pl-sb" min="0" max="60" value="2"></label></div>
+    <label class="row" style="gap:8px"><input type="checkbox" id="pl-buy"> 🛒 Это покупка — показать в «Покупках»</label>
     <button class="btn ghost small" data-s="add">+ Добавить подзадачу</button>
     <div class="actions"><button class="btn ghost danger" data-s="delTask">Удалить</button><span class="row"><button class="btn ghost" data-s="done">${t.done ? 'Вернуть в работу' : '✓ Сделано'}</button><button class="btn" data-s="save">Сохранить</button></span></div>`, 'Дело');
   sh.addEventListener('click', e => {
     const b = e.target.closest('[data-s]'); if (!b) return;
     const k = b.dataset.s;
     if (k === 'q') { const q = QUADS.find(x => x.id === b.dataset.v); t.important = q.imp; t.urgent = q.urg; commit(); sh.querySelectorAll('[data-s="q"]').forEach(x => x.setAttribute('aria-pressed', x === b)); return; }
-    if (k === 'add') { const ti = document.getElementById('pl-st').value.trim(); if (!ti) return document.getElementById('pl-st').focus(); t.subs = [...(t.subs || []), { id: uid(), title: ti, before: Math.max(0, +document.getElementById('pl-sb').value || 0), done: false }]; commit(); closeSheet(); planSheet(t.id); toast('Подзадача добавлена'); return; }
+    if (k === 'add') { const ti = document.getElementById('pl-st').value.trim(); if (!ti) return document.getElementById('pl-st').focus(); const buy = document.getElementById('pl-buy').checked || /^(купить|заказать)(\s|$)/i.test(ti); t.subs = [...(t.subs || []), { id: uid(), title: ti, before: Math.max(0, +document.getElementById('pl-sb').value || 0), done: false, ...(buy ? { buy: true, shop: t.ctx === 'dacha' ? 'dacha' : 'other' } : {}) }]; commit(); closeSheet(); planSheet(t.id); toast('Подзадача добавлена'); return; }
     if (k === 'del') { t.subs = (t.subs || []).filter(s => s.id !== b.dataset.sid); commit(); closeSheet(); planSheet(t.id); return; }
     if (k === 'done' && b.dataset.sid) { const s = t.subs.find(x => x.id === b.dataset.sid); s.done = b.checked; commit(); return; }
     if (k === 'done') { t.done = !t.done; commit(); closeSheet(); toast(t.done ? 'Сделано' : 'Вернула в работу'); return; }

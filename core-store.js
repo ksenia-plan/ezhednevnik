@@ -3,6 +3,7 @@
 // Сервера нет: данные никуда не отправляются. Перенос между устройствами — копией (exportAll/importAll).
 import { today } from './core-dates.js';
 import { DEFAULT_FLAG_TYPES } from './core-flags.js';
+import { DEFAULT_OCCASIONS } from './holidays-model.js';
 import { seedTasks, extraTasks, DAUGHTER_WK_COND, ZONES, BEAUTY_RE } from './core-seed.js';
 
 const DB_NAME = 'ezhednevnik';
@@ -113,7 +114,7 @@ export function importAll(text) {
 }
 
 /** Обновления правил для уже сохранённых данных (без потери твоих изменений). */
-const SYS_VER = 18;
+const SYS_VER = 19;
 function upgrade() {
   if ((state.meta.sysVer || 0) >= SYS_VER) return false;
   // 1) выезд на дачу вечером после работы, если завтра дача, а муж выходной
@@ -197,6 +198,8 @@ function upgrade() {
     const walk = n => { if (!n || !n.items) return; for (const it of n.items) { if (it.op === 'or' && it.items.some(x => x.flag === 'vac_me' && x.not) && !it.items.some(x => x.flag === 'wknd')) it.items.push({ flag: 'wknd' }); walk(it); } };
     walk(t.cond);
   }
+  // 19) праздники и поводы
+  if (!state.meta.occasions) state.meta.occasions = JSON.parse(JSON.stringify(DEFAULT_OCCASIONS));
   state.meta.sysVer = SYS_VER;
   return true;
 }

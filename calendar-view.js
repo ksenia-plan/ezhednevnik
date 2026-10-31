@@ -12,6 +12,7 @@ import { setDone, moveItem, skipItem, getTask, updateTask, deleteTask } from './
 import { openEditor } from './tasks-editor.js';
 import { nextBirthday } from './birthdays-model.js';
 import { suggestionsHtml, slotChip } from './assistant-suggest.js';
+import { allPurchases } from './shop-view.js';
 import { markDay } from './flags-view.js';
 import { bookingOptions, ruleFor, planFor, comboDays, apptMoveOptions, apptWhyNot, apptGap } from './core-booking.js';
 
@@ -110,7 +111,8 @@ function dayView(ds) {
   const favNext = state.tasks.filter(t => t.fav && !t.archived).map(t => { for (let i = 0; i < 62; i++) { const d = addDays(ds < today() ? today() : ds, i); const it = itemsOn(d).find(x => x.task === t && !x.done); if (it) return { t, it }; } return { t, it: null }; });
   const favHtml = favNext.map(({ t, it }) => `<button class="chip" data-act="series" data-id="${t.id}">★ ${esc(t.title)}: ${it ? esc(fmtDay(it.ds)) + (it.time ? ' ' + it.time : '') : '—'}</button>`).join('');
   // одна строка с прокруткой вбок: признаки дня, ссылки на планы, избранное — чтобы план дня был на первом экране
-  const strip = `<div class="hscroll">${pillsInline(ds)}${planLinks(ds, true)}${favHtml}</div>`;
+  const buyN = ds === today() ? allPurchases().filter(p => !p.done && p.due && p.due <= ds).length : 0;
+  const strip = `<div class="hscroll">${pillsInline(ds)}${buyN ? `<button class="chip" data-act="nav" data-v="shop">🛒 Купить: ${buyN} ›</button>` : ''}${planLinks(ds, true)}${favHtml}</div>`;
   const odHtml = od.length ? `<details class="od"><summary>⚠ Просрочено: ${od.length} — ${esc(od.slice(0, 2).map(t => t.title).join(', '))}${od.length > 2 ? '…' : ''}</summary><div class="list">${od.map(t => `<div class="it"><div class="tm" style="color:var(--danger)">${esc(fmtDay(t.date))}</div><div class="bd" style="--c:${cat(t.cat).color}" data-act="item" data-id="${t.id}" data-orig="${t.date}" data-ds="${t.date}"><div class="t">${esc(t.title)}</div></div><button class="btn ghost small" data-act="toToday" data-id="${t.id}">На сегодня</button></div>`).join('')}</div></details>` : '';
   return `<div class="daytone" style="${toneStyle(ds)}">${dayTone(ds) ? `<div class="tonebar">${esc(dayTone(ds).name)}</div>` : ''}${strip}
   ${ds === today() ? nowNext(items) : ''}

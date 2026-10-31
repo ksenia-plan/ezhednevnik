@@ -10,6 +10,7 @@ export const CATS = [
   { id: 'padel', name: 'Падел', color: '#2F7FD0' },
   { id: 'care', name: 'Врачи и здоровье', color: '#B0518F' },
   { id: 'beauty', name: 'Красота', color: '#D0458C' },
+  { id: 'shop', name: 'Покупки', color: '#7A5C2E' },
   { id: 'home', name: 'Дом', color: '#8A6A3B' },
   { id: 'money', name: 'Счета', color: '#B26A00' },
   { id: 'english', name: 'Английский', color: '#B98110' },

@@ -11,6 +11,8 @@ import { describeRule } from './core-recur.js';
 import * as calendar from './calendar-view.js';
 import * as work from './work-view.js';
 import * as birthdays from './birthdays-view.js';
+import * as shop from './shop-view.js';
+import * as holidays from './holidays-view.js';
 import * as flags from './flags-view.js';
 import * as assistant from './assistant-suggest.js';
 import * as claude from './claude-view.js';
@@ -24,20 +26,22 @@ const ICONS = {
   calendar: '<rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
   work: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/>',
   birthdays: '<path d="M4 21h16M5 21v-7h14v7M12 14V9M12 9c-1.5 0-2-1-2-2s2-3 2-3 2 2 2 3-.5 2-2 2z"/>',
+  shop: '<path d="M3 5h2l2.2 10.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.5L20.5 8H6.2"/><circle cx="10" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/>',
+  holidays: '<rect x="4" y="9" width="16" height="11" rx="1.5"/><path d="M3 9h18M12 9v11M12 9c-2-4-6-4-6-1.5S10 9 12 9zM12 9c2-4 6-4 6-1.5S14 9 12 9z"/>',
   more: '<circle cx="5.5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18.5" cy="12" r="1.5"/>'
 };
 // нижняя панель: 4 основных раздела + первая вкладка-модуль
-const BOTTOM = [['calendar', 'Календарь'], ['work', 'Планы'], ['birthdays', 'ДР'], [TAB_MODULES[0].id, TAB_MODULES[0].name], ['more', 'Ещё']];
+const BOTTOM = [['calendar', 'Календарь'], ['work', 'Планы'], ['shop', 'Покупки'], ['holidays', 'Праздники'], ['more', 'Ещё']];
 
 let route = 'calendar';
 const SCREENS = {
-  calendar: calendar.render, work: work.render, birthdays: birthdays.render, flags: flags.render,
+  calendar: calendar.render, work: work.render, birthdays: holidays.render, shop: shop.render, holidays: holidays.render, flags: flags.render,
   assistant: assistant.render, claude: claude.render, settings: settings.render, more: moreView, all: allTasksView
 };
 
 function moreView() {
   const items = [['all', '📋', 'Все задачи и серии', 'поиск, фильтры, все даты каждого дела'], ['assistant', '💡', 'Помощник', 'окна для записей, что перенести, подсказки'], ['flags', '🗓', 'Признаки дня и периоды', 'отпуск, каникулы, дача, больничный, цикл'],
-    ...TAB_MODULES.slice(1).map(m => [m.id, '🧘', m.name, 'комплексы и видео']), ['claude', '✨', 'Для Claude', 'обмен с чатом: мемо, задачи, правки'], ['settings', '⚙️', 'Настройки', 'тема, режим дня, график мужа, резервная копия']];
+    ...TAB_MODULES.map(m => [m.id, m.id === 'english' ? '🇬🇧' : '🧘', m.name, m.id === 'english' ? 'уроки, слова, практика' : 'комплексы и видео']), ['claude', '✨', 'Для Claude', 'обмен с чатом: мемо, задачи, правки'], ['settings', '⚙️', 'Настройки', 'тема, режим дня, график мужа, резервная копия']];
   return `<h1>Ещё</h1><div class="list">${items.map(([id, ic, n, h]) => `<div class="it more-it" data-act="openTab" data-v="${id}" style="cursor:pointer"><div class="tm" style="font-size:22px;text-align:center">${ic}</div><div class="grow"><div class="t">${n}</div><div class="m">${h}</div></div><span class="hint" style="font-size:20px">›</span></div>`).join('')}</div>`;
 }
 let allFilter = '', allKind = 'all';
@@ -94,17 +98,17 @@ export function render() {
   const main = document.getElementById('main');
   const ae = document.activeElement;
   // не перерисовываем, пока человек печатает в поле (кроме поиска)
-  if (ae && main.contains(ae) && /INPUT|TEXTAREA|SELECT/.test(ae.tagName) && ae.type !== 'checkbox' && ae.id !== 'all-q' && ae.id !== 'ser-q') { render.pending = true; return; }
+  if (ae && main.contains(ae) && /INPUT|TEXTAREA|SELECT/.test(ae.tagName) && ae.type !== 'checkbox' && ae.id !== 'all-q' && ae.id !== 'ser-q' && ae.id !== 'sh-q') { render.pending = true; return; }
   const keep = {}; for (const id of ['w-in', 'cl-in']) { const el = document.getElementById(id); if (el) keep[id] = el.value; }
   const y = window.scrollY;
   const mod = tabModule(route);
   main.classList.toggle('wide', route === 'calendar' && calendar.cal.view === 'week');
   main.innerHTML = eveningBanner() + (mod ? mod.render() : (SCREENS[route] || SCREENS.calendar)());
   for (const id in keep) { const el = document.getElementById(id); if (el) el.value = keep[id]; }
-  for (const qid of ['all-q', 'ser-q']) { const s = document.getElementById(qid); if (s && ae?.id === qid) { s.focus(); s.setSelectionRange(s.value.length, s.value.length); } }
+  for (const qid of ['all-q', 'ser-q', 'sh-q']) { const s = document.getElementById(qid); if (s && ae?.id === qid) { s.focus(); s.setSelectionRange(s.value.length, s.value.length); } }
   window.scrollTo(0, y);
   document.querySelectorAll('.tabs button').forEach(b => b.toggleAttribute('aria-current', b.dataset.v === route || (b.dataset.v === 'more' && !BOTTOM.some(x => x[0] === route))));
-  document.getElementById('fab').hidden = !['calendar', 'work', 'all'].includes(route);
+  document.getElementById('fab').hidden = !['calendar', 'all'].includes(route);
   window.__plannerRendered = true;
 }
 export function go(r) { route = r; render(); window.scrollTo(0, 0); }
@@ -183,7 +187,7 @@ async function start() {
   document.getElementById('tabs').innerHTML = `<div>${BOTTOM.map(([id, n]) => `<button data-act="nav" data-v="${id}"><svg viewBox="0 0 24 24">${ICONS[id] || tabModule(id)?.icon || ''}</svg>${esc(n)}</button>`).join('')}</div>`;
   document.addEventListener('click', e => { dispatch(e); });
   document.addEventListener('change', e => { if (flags.onFlagsChange(e)) return; if (settings.onSettingsChange(e)) return; });
-  document.addEventListener('input', e => { if (e.target.id === 'all-q') { allFilter = e.target.value; render(); } if (e.target.id === 'ser-q') { calendar.cal.q = e.target.value; render(); } });
+  document.addEventListener('input', e => { if (e.target.id === 'all-q') { allFilter = e.target.value; render(); } if (e.target.id === 'ser-q') { calendar.cal.q = e.target.value; render(); } shop.onShopInput(e); });
   document.addEventListener('focusout', () => setTimeout(() => { if (render.pending) { render.pending = false; render(); } }, 0));
   document.getElementById('scrim').addEventListener('click', e => { if (e.target.id === 'scrim') { closeSheet(); if (render.pending) { render.pending = false; render(); } } });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && sheetOpen()) closeSheet(); if ((e.key === 'Enter' || e.key === ' ') && e.target.getAttribute?.('role') === 'button') { e.preventDefault(); e.target.click(); } });
