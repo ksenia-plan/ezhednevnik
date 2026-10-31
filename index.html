@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B6E78">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ежедневник">
+<title>Ежедневник</title>
+<link rel="manifest" href="manifest.webmanifest" crossorigin="use-credentials">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="stylesheet" href="styles.css">
+<script>
+  // Тема до загрузки — без вспышки светлого экрана
+  try { var th = (JSON.parse(localStorage.getItem('theme-hint') || '""')); if (th && th !== 'auto') document.documentElement.setAttribute('data-theme', th); } catch (e) {}
+  // Сторож запуска: если программа не стартовала за 8 секунд — показать понятное сообщение
+  window.__appVer = '2.5.0';
+  window.onerror = function (m, s, l, c) { window.__plannerErr = String(m) + ' @' + l + ':' + c; };
+  setTimeout(function () {
+    if (window.__plannerOk) return;
+    var el = document.getElementById('boot'); if (!el) return;
+    var err = String(window.__plannerErr || 'программа не запустилась').replace(/[<>&]/g, '');
+    el.innerHTML = '<b>Ежедневник не запустился</b><span class="hint">Проверь интернет и обнови страницу (потяни вниз). Если не помогло — пришли скриншот этого экрана в чат.</span><code style="word-break:break-all">Версия ' + window.__appVer + ' · шаг ' + (window.__p || 0) + ' · ' + err + '</code>';
+  }, 8000);
+</script>
+</head>
+<body>
+<div class="wrap" id="main"><div class="card" id="boot"><b>Открываю ежедневник…</b><span class="hint">Первый запуск может занять несколько секунд.</span></div></div>
+<div class="fab" id="fab" hidden><button id="fab-add" aria-label="Добавить дело">+</button></div>
+<nav class="tabs" id="tabs" aria-label="Разделы"></nav>
+<div class="scrim" id="scrim" hidden></div>
+<div class="toast" id="toast" hidden></div>
+<script>window.__p = 1;</script>
+<script type="module" src="app.js"></script>
+<script>if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });</script>
+</body>
+</html>
