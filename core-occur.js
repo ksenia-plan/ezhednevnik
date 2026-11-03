@@ -13,6 +13,9 @@ let dayCache = new Map(), weekCache = new Map();
 export function resetOccurCache() { rotCache.clear(); flagDayCache.clear(); dayCache = new Map(); weekCache = new Map(); afterCache.clear(); }
 
 /** Подходит ли день задаче без учёта лимита в неделю. */
+// «не дома»: мой отпуск, поездка и любые свои признаки с такими словами в названии
+const awayIds = () => new Set(['vac_me', 'trip', ...state.flagTypes.filter(x => !x.auto && /поездк|отпуск|путешеств|командиров|отъезд/i.test(x.name) && x.id !== 'vac_h').map(x => x.id)]);
+const awayDay = ds => { const f = flagsOf(ds), ids = awayIds(); return [...f].some(x => ids.has(x)); };
 function baseMatch(t, ds) {
   if (t.archived) return false;
   if ((t.kind === 'once' || t.kind === 'event') && !t.date && (t.occ || t.bday || (t.ctx && t.ctx !== 'work'))) return !t.done && ds === planDate(t); // «на ближайшую дачу», «за 14 дней до Нового года»
@@ -21,6 +24,8 @@ function baseMatch(t, ds) {
   if (t.kind !== 'repeat') return false;
   if (t.rule?.freq === 'after') return ds === afterDay(t);
   if (!matchesRule(t, ds)) return false;
+  // отпуск и поездка — как дача: дело, которое не ставится на даче, не ставится и в эти дни (даже если в его условии этого нет)
+  if (t.cond && awayDay(ds) && JSON.stringify(t.cond).includes('"flag":"dacha","not":true')) return false;
   return evalCond(t.cond, ds);
 }
 
