@@ -1,14 +1,14 @@
 // Праздники и подарки: поводы (Новый год, 8 марта, свои), подготовка к каждому — дела и покупки «за N дней до»,
 // подарки ко дням рождения. Ниже — дни рождения (прежняя вкладка).
-import { state, commit, uid } from './core-store.js';
-import { esc, on, toast, openSheet, closeSheet } from './ui.js';
-import { today, addDays, fmtDay, plural, diffDays } from './core-dates.js';
-import { addTask, newTask, getTask, deleteTask } from './tasks-model.js';
-import { planDate } from './core-occur.js';
-import { occDate, NY_TEMPLATE } from './holidays-model.js';
-import { nextBirthday } from './birthdays-model.js';
-import * as birthdays from './birthdays-view.js';
-import { shopCat, shopSheet, SHOP_CATS } from './shop-view.js';
+import { state, commit, uid } from './core-store.js?v=2.6.3';
+import { esc, on, toast, openSheet, closeSheet } from './ui.js?v=2.6.3';
+import { today, addDays, fmtDay, plural, diffDays } from './core-dates.js?v=2.6.3';
+import { addTask, newTask, getTask, deleteTask } from './tasks-model.js?v=2.6.3';
+import { planDate } from './core-occur.js?v=2.6.3';
+import { occDate, NY_TEMPLATE } from './holidays-model.js?v=2.6.3';
+import { nextBirthday } from './birthdays-model.js?v=2.6.3';
+import * as birthdays from './birthdays-view.js?v=2.6.3';
+import { shopCat, shopSheet, SHOP_CATS } from './shop-view.js?v=2.6.3';
 
 const occs = () => (state.meta.occasions = state.meta.occasions || []);
 const itemsOf = o => state.tasks.filter(t => !t.archived && t.occ === o.id && t.kind === 'once');

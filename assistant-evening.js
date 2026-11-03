@@ -1,12 +1,12 @@
 // Вечерний разбор: за час до сна — что за день не сделано и что с этим делать.
 // Баннер виден на любой вкладке; в листе — перенести на завтра / другой день / пропустить / сделано, или «перестроить всё».
-import { state, commit, undoSnapshot } from './core-store.js';
-import { esc, on, openSheet, closeSheet, toast, saveUndo } from './ui.js';
-import { today, addDays, fmtDay, toMin, nowMin } from './core-dates.js';
-import { flagsOf } from './core-flags.js';
-import { itemsOn, moveOptions, itemTitle } from './core-occur.js';
-import { getTask, moveItem, skipItem, setDone } from './tasks-model.js';
-import { cat } from './core-seed.js';
+import { state, commit, undoSnapshot } from './core-store.js?v=2.6.3';
+import { esc, on, openSheet, closeSheet, toast, saveUndo } from './ui.js?v=2.6.3';
+import { today, addDays, fmtDay, toMin, nowMin } from './core-dates.js?v=2.6.3';
+import { flagsOf } from './core-flags.js?v=2.6.3';
+import { itemsOn, moveOptions, itemTitle } from './core-occur.js?v=2.6.3';
+import { getTask, moveItem, skipItem, setDone } from './tasks-model.js?v=2.6.3';
+import { cat } from './core-seed.js?v=2.6.3';
 
 /** Время отбоя сегодня (в минутах). */
 function bedTime(ds = today()) {
@@ -70,7 +70,7 @@ export function openEvening() {
     if (k === 'done') setDone(t, orig, true);
     if (k === 'skip') skipItem(t, orig);
     if (k === 'to') { const [d, tm] = b.dataset.v.split('|'); moveItem(t, orig, d, tm); toast(`${t.title}: ${fmtDay(d)}, ${tm}`); }
-    if (k === 'pick') { closeSheet(); import('./calendar-view.js').then(v => v.itemSheet(t.id, orig, today())); return; }
+    if (k === 'pick') { closeSheet(); import('./calendar-view.js?v=2.6.3').then(v => v.itemSheet(t.id, orig, today())); return; }
     r.remove();
     if (!sh.querySelector('.eve-row')) { state.meta.eveDone = { ...(state.meta.eveDone || {}), [today()]: true }; commit(); closeSheet(); toast('День разобран 👍'); }
   });

@@ -1,5 +1,5 @@
 // Праздники и поводы: даты каждый год сами, к каждому — список дел и покупок «за N дней до».
-import { today, addDays, diffDays } from './core-dates.js';
+import { today, addDays, diffDays } from './core-dates.js?v=2.6.3';
 
 export const DEFAULT_OCCASIONS = [
   { id: 'ny', name: 'Новый год', icon: '🎄', md: '12-31' },

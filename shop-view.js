@@ -1,12 +1,12 @@
 // Покупки: общий список и по категориям/поводам, со сроком или без.
 // Покупка — обычное разовое дело с полем shop (категория). Со сроком — видна в календаре в этот день.
 // Покупки из «Планов» (подзадачи с отметкой 🛒) и из праздников показываются здесь же — справочник общий.
-import { state, commit } from './core-store.js';
-import { esc, on, toast, openSheet, closeSheet } from './ui.js';
-import { today, addDays, fmtDay, diffDays, weekStart } from './core-dates.js';
-import { addTask, newTask, getTask, deleteTask, parseText } from './tasks-model.js';
-import { planDate, nextFlagDay } from './core-occur.js';
-import { occDate } from './holidays-model.js';
+import { state, commit } from './core-store.js?v=2.6.3';
+import { esc, on, toast, openSheet, closeSheet } from './ui.js?v=2.6.3';
+import { today, addDays, fmtDay, diffDays, weekStart } from './core-dates.js?v=2.6.3';
+import { addTask, newTask, getTask, deleteTask, parseText } from './tasks-model.js?v=2.6.3';
+import { planDate, nextFlagDay } from './core-occur.js?v=2.6.3';
+import { occDate } from './holidays-model.js?v=2.6.3';
 
 export const SHOP_CATS = [
   { id: 'market', icon: '📦', name: 'Маркетплейсы', re: /озон|ozon|wb|вайлдбер|wildber|маркет|али|заказ|доставк|пвз|пункт выдачи/i },
@@ -86,7 +86,7 @@ on('shDone', (d, el) => {
   commit(); if (el.checked) toast('Куплено ✓');
 });
 on('shNew', () => shopSheet(null));
-on('shEdit', d => { const t = getTask(d.id); if (!t) return; if (d.sub) { import('./work-view.js').then(w => w.planSheet(t.id)); return; } shopSheet(t); });
+on('shEdit', d => { const t = getTask(d.id); if (!t) return; if (d.sub) { import('./work-view.js?v=2.6.3').then(w => w.planSheet(t.id)); return; } shopSheet(t); });
 
 /** Карточка покупки: название, категория, срок (дата / к даче / к празднику / без срока), заметка (ссылка, ПВЗ). */
 export function shopSheet(t, preset = {}) {

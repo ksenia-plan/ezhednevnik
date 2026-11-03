@@ -1,8 +1,8 @@
 // Признаки дня и периоды: справочник (редактируемый), отметки дней и периодов, календарь цикла.
-import { state, commit, uid } from './core-store.js';
-import { esc, on, toast, openSheet, closeSheet } from './ui.js';
-import { today, dayLabel, fmtDay, addDays, diffDays, plural } from './core-dates.js';
-import { flagType, cycleLen, cycleInfo, flagsOf, isDachaDay, resetFlagCache } from './core-flags.js';
+import { state, commit, uid } from './core-store.js?v=2.6.3';
+import { esc, on, toast, openSheet, closeSheet } from './ui.js?v=2.6.3';
+import { today, dayLabel, fmtDay, addDays, diffDays, plural } from './core-dates.js?v=2.6.3';
+import { flagType, cycleLen, cycleInfo, flagsOf, isDachaDay, resetFlagCache } from './core-flags.js?v=2.6.3';
 
 /** Отметить или снять ручной признак на один день (кнопки на экране дня). */
 export function markDay(flag, ds) {

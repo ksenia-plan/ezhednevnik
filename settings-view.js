@@ -1,9 +1,9 @@
 // Настройки: тема, режим дня, график мужа, резервная копия, перенос из старой версии.
-import { state, commit, exportAll, importAll } from './core-store.js';
-import { esc, on, toast, copyText, download, openSheet, closeSheet } from './ui.js';
-import { today, addDays, WDS, D, fmtDay } from './core-dates.js';
-import { husbandShift, SHIFT_NAMES } from './core-flags.js';
-import { findOldData, migrateOld } from './settings-migrate.js';
+import { state, commit, exportAll, importAll } from './core-store.js?v=2.6.3';
+import { esc, on, toast, copyText, download, openSheet, closeSheet } from './ui.js?v=2.6.3';
+import { today, addDays, WDS, D, fmtDay } from './core-dates.js?v=2.6.3';
+import { husbandShift, SHIFT_NAMES } from './core-flags.js?v=2.6.3';
+import { findOldData, migrateOld } from './settings-migrate.js?v=2.6.3';
 
 export function render() {
   const st = state.settings, t = today(), old = !state.meta.migratedAt ? findOldData() : null;
@@ -21,7 +21,7 @@ export function render() {
     <span class="hint">Все данные хранятся только в этом телефоне. Копия нужна, чтобы перенести их на другое устройство или восстановить. ${state.meta.lastBackup ? 'Последняя копия: ' + esc(fmtDay(state.meta.lastBackup.slice(0, 10))) + '.' : 'Копий ещё не было.'}</span>
     <div class="row"><button class="btn" data-act="bkSave">Сохранить копию</button><button class="btn ghost" data-act="bkLoad">Загрузить копию</button></div>
     <div class="fields"><label class="field">Напоминать о копии раз в, дней<input type="number" min="1" max="60" data-set="backupEveryDays" data-num value="${+st.backupEveryDays || 7}"></label></div></div></section>
-  <section><h2>О приложении</h2><div class="note"><b>Версия ${esc(window.__appVer || '')}</b>. Работает без интернета. Не обращается к Claude API и не содержит ключей. Данные не отправляются на сторонние серверы. Исключение — голосовой ввод: его распознаёт браузер на серверах Google или Яндекса, и только когда ты нажимаешь «Сказать».</div></section>`;
+  <section><h2>О приложении</h2><button class="btn" data-act="forceUpdate">🔄 Обновить приложение до последней версии</button><span class="hint">Нажми после того, как выложила новую версию на сайт. Данные не пропадут.</span><div class="note"><b>Версия ${esc(window.__appVer || '')}</b>. Работает без интернета. Не обращается к Claude API и не содержит ключей. Данные не отправляются на сторонние серверы. Исключение — голосовой ввод: его распознаёт браузер на серверах Google или Яндекса, и только когда ты нажимаешь «Сказать».</div></section>`;
 }
 
 on('theme', d => { state.settings.theme = d.v; applyTheme(); commit(); });
@@ -58,3 +58,14 @@ export function onSettingsChange(e) {
   const ks = path.split('.'); let o = state.settings; for (let i = 0; i < ks.length - 1; i++) o = o[ks[i]];
   o[ks[ks.length - 1]] = v; commit(); toast('Сохранено'); return true;
 }
+
+// Принудительное обновление: удаляем сохранённые файлы приложения (не данные!) и загружаем заново с сайта.
+on('forceUpdate', async () => {
+  try {
+    if (navigator.onLine === false) { toast('Нет интернета — обновить не получится'); return; }
+    toast('Обновляю…');
+    if (window.caches) for (const k of await caches.keys()) await caches.delete(k);
+    if (navigator.serviceWorker) for (const r of await navigator.serviceWorker.getRegistrations()) await r.unregister();
+    location.replace(location.pathname + '?v=' + Date.now());
+  } catch (e) { toast('Не получилось: ' + e.message); }
+});

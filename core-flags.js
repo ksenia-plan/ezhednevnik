@@ -1,8 +1,8 @@
 // Признаки дня. Это основа условий: «ставить только когда муж на смене», «не в мой отпуск» и т.п.
 // Автоматические признаки считаются из производственного календаря, графика мужа и цикла.
 // Ручные признаки (отпуск, каникулы, дача…) пользователь ставит на день или период; их список редактируемый.
-import { isWorkday, holidayName, SHORT } from './core-prodcal.js';
-import { diffDays, addDays } from './core-dates.js';
+import { isWorkday, holidayName, SHORT } from './core-prodcal.js?v=2.6.3';
+import { diffDays, addDays } from './core-dates.js?v=2.6.3';
 
 export const DEFAULT_FLAG_TYPES = [
   { id: 'my_work', name: 'Мой рабочий день', color: '#2C64C6', auto: true },
@@ -73,6 +73,7 @@ export function cycleLen() {
 export function isDachaDay(ds) {
   if (ctx.flagMarks.some(m => m.flag === 'dacha' && ds >= m.from && ds <= (m.to || m.from))) return true;
   if ((ctx.meta.dachaOff || {})[ds]) return false;
+  if (ctx.flagMarks.some(m => m.flag === 'trip' && ds >= m.from && ds <= (m.to || m.from))) return false; // в поездке — не на даче
   const meOff = !isWorkday(ds) || ctx.flagMarks.some(m => (m.flag === 'vac_me' || m.flag === 'sick') && ds >= m.from && ds <= (m.to || m.from));
   const hOff = husbandShift(ds) === 'В' || ctx.flagMarks.some(m => m.flag === 'vac_h' && ds >= m.from && ds <= (m.to || m.from));
   return meOff && hOff;
@@ -86,7 +87,7 @@ export function flagsOf(ds) {
   const f = manualFlags(ds);
   // день сдачи крови: работаю, но приезжаю позже; спорт и уборку в этот день не ставим
   if ((ctx.tasks || []).some(t => t.kind === 'once' && t.date === ds && /кров|донор/i.test(t.title) && !t.booking)) f.add('donor');
-  const meOff = f.has('vac_me') || f.has('sick');
+  const meOff = f.has('vac_me') || f.has('sick') || f.has('trip'); // в поездке не работаю
   f.add(isWorkday(ds) && !meOff ? 'my_work' : 'my_off');
   if (holidayName(ds)) f.add('holiday');
   { const w = new Date(ds + 'T12:00').getDay(); if (w === 0 || w === 6) f.add('wknd'); }

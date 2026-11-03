@@ -1,11 +1,11 @@
-import { isAppt } from './core-seed.js';
+import { isAppt } from './core-seed.js?v=2.6.3';
 // Записи на процедуры и к врачам: когда подходит срок, приложение предлагает окна для новой записи.
 // Своя запись (разовое дело со временем) никогда не двигается. Окна ищутся по правилам процедуры.
-import { state } from './core-store.js';
-import { evalCond } from './core-cond.js';
-import { flagsOf, husbandShift } from './core-flags.js';
-import { addDays, addMonths, today, toMin, fromMin, diffDays } from './core-dates.js';
-import { freeForManual, afterDay, lastAppt } from './core-occur.js';
+import { state } from './core-store.js?v=2.6.3';
+import { evalCond } from './core-cond.js?v=2.6.3';
+import { flagsOf, husbandShift } from './core-flags.js?v=2.6.3';
+import { addDays, addMonths, today, toMin, fromMin, diffDays } from './core-dates.js?v=2.6.3';
+import { freeForManual, afterDay, lastAppt } from './core-occur.js?v=2.6.3';
 
 // Правила для окон записи: условие дня, длительность, удобное время в будни и выходные.
 const H_WORKS = { op: 'and', items: [{ flag: 'h_works' }, { flag: 'dacha', not: true }, { flag: 'dacha_eve', not: true }] };

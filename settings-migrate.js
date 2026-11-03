@@ -1,7 +1,7 @@
 // Перенос данных из прежней версии ежедневника (той же ссылки на Netlify или файла копии).
 // Старая версия хранила всё одним объектом: {tasks, settings{appts, birthdays, dacha, cycle, kids…}}.
-import { state, commit, uid } from './core-store.js';
-import { today, addDays } from './core-dates.js';
+import { state, commit, uid } from './core-store.js?v=2.6.3';
+import { today, addDays } from './core-dates.js?v=2.6.3';
 
 const OLD_KEYS = ['planner-cache-v1', 'smart-planner-v1'];
 export function findOldData() {

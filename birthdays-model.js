@@ -1,5 +1,5 @@
 // Дни рождения: дата вводится один раз, ближайшая дата и напоминания считаются автоматически каждый год.
-import { today, diffDays } from './core-dates.js';
+import { today, diffDays } from './core-dates.js?v=2.6.3';
 
 const leap = y => y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0);
 

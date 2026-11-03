@@ -1,16 +1,16 @@
 // Помощник: локальные правила, без нейросети. Смотрит на расписание и предлагает действия.
 // Каждое предложение можно принять (выполняется действие) или отклонить (скрывается на время).
-import { state, commit } from './core-store.js';
-import { BEAUTY_RE } from './core-seed.js';
-import { esc, on, toast, openSheet, closeSheet } from './ui.js';
-import { today, addDays, diffDays, fmtDay, fromMin, toMin, nowMin, weekStart, plural } from './core-dates.js';
-import { itemsOn, freeGaps, overdue, afterDay, freeForManual } from './core-occur.js';
-import { nextBirthday } from './birthdays-model.js';
-import { giftTask } from './birthdays-view.js';
-import { moveItem, setDone, updateTask, getTask } from './tasks-model.js';
-import { openEditor } from './tasks-editor.js';
-import { bookingOptions, ruleFor, apptTitle, planFor, gapHint } from './core-booking.js';
-import { addTask, newTask } from './tasks-model.js';
+import { state, commit } from './core-store.js?v=2.6.3';
+import { BEAUTY_RE } from './core-seed.js?v=2.6.3';
+import { esc, on, toast, openSheet, closeSheet } from './ui.js?v=2.6.3';
+import { today, addDays, diffDays, fmtDay, fromMin, toMin, nowMin, weekStart, plural } from './core-dates.js?v=2.6.3';
+import { itemsOn, freeGaps, overdue, afterDay, freeForManual } from './core-occur.js?v=2.6.3';
+import { nextBirthday } from './birthdays-model.js?v=2.6.3';
+import { giftTask } from './birthdays-view.js?v=2.6.3';
+import { moveItem, setDone, updateTask, getTask } from './tasks-model.js?v=2.6.3';
+import { openEditor } from './tasks-editor.js?v=2.6.3';
+import { bookingOptions, ruleFor, apptTitle, planFor, gapHint } from './core-booking.js?v=2.6.3';
+import { addTask, newTask } from './tasks-model.js?v=2.6.3';
 
 const dismissed = key => { const u = state.meta.dismiss?.[key]; return u && today() <= u; };
 

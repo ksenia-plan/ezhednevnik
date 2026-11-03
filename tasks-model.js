@@ -8,10 +8,10 @@
 //   remind (за сколько дней напомнить), note, info (не занимает время), block (занятое время, без отметки),
 //   flex (сдвигать в свободное окно), booking (напоминание записаться), tab, archived
 // }
-import { state, commit, uid, undoSnapshot } from './core-store.js';
-import { saveUndo } from './ui.js';
+import { state, commit, uid, undoSnapshot } from './core-store.js?v=2.6.3';
+import { saveUndo } from './ui.js?v=2.6.3';
 const snap = () => saveUndo(undoSnapshot()); // для кнопки «Отменить» в подсказке
-import { today, addDays, wd, pad } from './core-dates.js';
+import { today, addDays, wd, pad } from './core-dates.js?v=2.6.3';
 
 export const KINDS = { once: 'Разовая', repeat: 'Повторяется', span: 'Период', event: 'Событие' };
 

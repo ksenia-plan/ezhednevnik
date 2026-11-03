@@ -1,13 +1,13 @@
 // Раскладка задач по дням: какие задачи стоят на конкретную дату.
 // Учитывает тип задачи, правило повторения, условие по признакам дня, лимит «N раз в неделю»,
 // переносы отдельных повторений, пропуски и выполнение.
-import { state } from './core-store.js';
-import { matchesRule, nextAfterDue } from './core-recur.js';
-import { evalCond } from './core-cond.js';
-import { addDays, weekStart, toMin, fromMin, today, D } from './core-dates.js';
-import { flagsOf } from './core-flags.js';
-import { nextBirthday } from './birthdays-model.js';
-import { occDate } from './holidays-model.js';
+import { state } from './core-store.js?v=2.6.3';
+import { matchesRule, nextAfterDue } from './core-recur.js?v=2.6.3';
+import { evalCond } from './core-cond.js?v=2.6.3';
+import { addDays, weekStart, toMin, fromMin, today, D } from './core-dates.js?v=2.6.3';
+import { flagsOf } from './core-flags.js?v=2.6.3';
+import { nextBirthday } from './birthdays-model.js?v=2.6.3';
+import { occDate } from './holidays-model.js?v=2.6.3';
 
 let dayCache = new Map(), weekCache = new Map();
 export function resetOccurCache() { rotCache.clear(); flagDayCache.clear(); dayCache = new Map(); weekCache = new Map(); afterCache.clear(); }

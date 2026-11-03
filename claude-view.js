@@ -2,13 +2,13 @@
 // Claude присылает в чате блок JSON с операциями → ты вставляешь его сюда → предпросмотр → «Применить».
 // В обратную сторону: «Скопировать для Claude» выгружает расписание текстом, ты вставляешь его в чат.
 // Приложение само никуда не обращается: всё происходит только по твоему нажатию.
-import { state, commit, uid } from './core-store.js';
-import { esc, on, toast, copyText } from './ui.js';
-import { CATS } from './core-seed.js';
-import { KINDS, newTask } from './tasks-model.js';
-import { describeRule } from './core-recur.js';
-import { describeCond } from './core-cond.js';
-import { fmtDay, today } from './core-dates.js';
+import { state, commit, uid } from './core-store.js?v=2.6.3';
+import { esc, on, toast, copyText } from './ui.js?v=2.6.3';
+import { CATS } from './core-seed.js?v=2.6.3';
+import { KINDS, newTask } from './tasks-model.js?v=2.6.3';
+import { describeRule } from './core-recur.js?v=2.6.3';
+import { describeCond } from './core-cond.js?v=2.6.3';
+import { fmtDay, today } from './core-dates.js?v=2.6.3';
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/, TIME = /^\d{2}:\d{2}$/;
 let pending = null;

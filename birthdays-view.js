@@ -1,9 +1,9 @@
 // Дни рождения: отдельная вкладка. Дата вводится один раз — напоминания каждый год сами.
-import { state, commit, uid } from './core-store.js';
-import { esc, on, toast, openSheet, closeSheet } from './ui.js';
-import { dayLabel, plural, addDays } from './core-dates.js';
-import { nextBirthday } from './birthdays-model.js';
-import { addTask, newTask } from './tasks-model.js';
+import { state, commit, uid } from './core-store.js?v=2.6.3';
+import { esc, on, toast, openSheet, closeSheet } from './ui.js?v=2.6.3';
+import { dayLabel, plural, addDays } from './core-dates.js?v=2.6.3';
+import { nextBirthday } from './birthdays-model.js?v=2.6.3';
+import { addTask, newTask } from './tasks-model.js?v=2.6.3';
 
 let editId = null;
 

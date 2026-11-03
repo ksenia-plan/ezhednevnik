@@ -1,26 +1,26 @@
 // Точка входа: загрузка данных, маршрутизация по вкладкам, общие обработчики, быстрое добавление.
-import { state, load, onChange, restoreSnapshot } from './core-store.js';
-import { initFlags, resetFlagCache } from './core-flags.js';
-import { resetOccurCache } from './core-occur.js';
-import { esc, on, dispatch, openSheet, closeSheet, toast, sheetOpen, setUndoApply } from './ui.js';
-import { today, fmtDay, addDays } from './core-dates.js';
-import { itemsOn, lastAppt } from './core-occur.js';
-import { planFor } from './core-booking.js';
-import { CATS, cat } from './core-seed.js';
-import { describeRule } from './core-recur.js';
-import * as calendar from './calendar-view.js';
-import * as work from './work-view.js';
-import * as birthdays from './birthdays-view.js';
-import * as shop from './shop-view.js';
-import * as holidays from './holidays-view.js';
-import * as flags from './flags-view.js';
-import * as assistant from './assistant-suggest.js';
-import * as claude from './claude-view.js';
-import * as settings from './settings-view.js';
-import { TAB_MODULES, tabModule } from './tabs-registry.js';
-import { parseText, addTask, newTask } from './tasks-model.js';
-import { openEditor } from './tasks-editor.js';
-import { eveningBanner } from './assistant-evening.js';
+import { state, load, onChange, restoreSnapshot } from './core-store.js?v=2.6.3';
+import { initFlags, resetFlagCache } from './core-flags.js?v=2.6.3';
+import { resetOccurCache } from './core-occur.js?v=2.6.3';
+import { esc, on, dispatch, openSheet, closeSheet, toast, sheetOpen, setUndoApply } from './ui.js?v=2.6.3';
+import { today, fmtDay, addDays } from './core-dates.js?v=2.6.3';
+import { itemsOn, lastAppt } from './core-occur.js?v=2.6.3';
+import { planFor } from './core-booking.js?v=2.6.3';
+import { CATS, cat } from './core-seed.js?v=2.6.3';
+import { describeRule } from './core-recur.js?v=2.6.3';
+import * as calendar from './calendar-view.js?v=2.6.3';
+import * as work from './work-view.js?v=2.6.3';
+import * as birthdays from './birthdays-view.js?v=2.6.3';
+import * as shop from './shop-view.js?v=2.6.3';
+import * as holidays from './holidays-view.js?v=2.6.3';
+import * as flags from './flags-view.js?v=2.6.3';
+import * as assistant from './assistant-suggest.js?v=2.6.3';
+import * as claude from './claude-view.js?v=2.6.3';
+import * as settings from './settings-view.js?v=2.6.3';
+import { TAB_MODULES, tabModule } from './tabs-registry.js?v=2.6.3';
+import { parseText, addTask, newTask } from './tasks-model.js?v=2.6.3';
+import { openEditor } from './tasks-editor.js?v=2.6.3';
+import { eveningBanner } from './assistant-evening.js?v=2.6.3';
 
 const ICONS = {
   calendar: '<rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',

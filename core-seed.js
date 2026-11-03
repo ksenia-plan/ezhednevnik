@@ -1,6 +1,6 @@
 // Стартовый набор: категории задач и шаблоны регулярных дел.
 // Всё это обычные задачи — их можно менять и удалять в приложении.
-import { today, addDays } from './core-dates.js';
+import { today, addDays } from './core-dates.js?v=2.6.3';
 
 export const CATS = [
   { id: 'personal', name: 'Личное', color: '#6B7785' },

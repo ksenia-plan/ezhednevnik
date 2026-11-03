@@ -1,20 +1,20 @@
 // Календарь — главный экран: виды «день», «неделя», «месяц», навигация и кнопка «Сегодня».
-import { state, commit } from './core-store.js';
-import { esc, on, openSheet, closeSheet, toast, enableDrag } from './ui.js';
-import { today, addDays, D, iso, WDS, MON, MON1, dayLabel, fmtDay, toMin, fromMin, nowMin, durTxt, weekStart, daysInMonth } from './core-dates.js';
-import { flagsOf, flagType, husbandShift, SHIFT_NAMES, cycleInfo, dachaIsAuto } from './core-flags.js';
-import { holidayName } from './core-prodcal.js';
-import { itemsOn, freeGaps, overdue, slotsAhead, moveOptions, whyNot, afterDay, lastAppt, altOn, itemTitle, rotZone, itemColor, planDate } from './core-occur.js';
-import { cat } from './core-seed.js';
-import { describeRule } from './core-recur.js';
-import { describeCond } from './core-cond.js';
-import { setDone, moveItem, skipItem, getTask, updateTask, deleteTask } from './tasks-model.js';
-import { openEditor } from './tasks-editor.js';
-import { nextBirthday } from './birthdays-model.js';
-import { suggestionsHtml, slotChip } from './assistant-suggest.js';
-import { allPurchases } from './shop-view.js';
-import { markDay } from './flags-view.js';
-import { bookingOptions, ruleFor, planFor, comboDays, apptMoveOptions, apptWhyNot, apptGap } from './core-booking.js';
+import { state, commit } from './core-store.js?v=2.6.3';
+import { esc, on, openSheet, closeSheet, toast, enableDrag } from './ui.js?v=2.6.3';
+import { today, addDays, D, iso, WDS, MON, MON1, dayLabel, fmtDay, toMin, fromMin, nowMin, durTxt, weekStart, daysInMonth } from './core-dates.js?v=2.6.3';
+import { flagsOf, flagType, husbandShift, SHIFT_NAMES, cycleInfo, dachaIsAuto } from './core-flags.js?v=2.6.3';
+import { holidayName } from './core-prodcal.js?v=2.6.3';
+import { itemsOn, freeGaps, overdue, slotsAhead, moveOptions, whyNot, afterDay, lastAppt, altOn, itemTitle, rotZone, itemColor, planDate } from './core-occur.js?v=2.6.3';
+import { cat } from './core-seed.js?v=2.6.3';
+import { describeRule } from './core-recur.js?v=2.6.3';
+import { describeCond } from './core-cond.js?v=2.6.3';
+import { setDone, moveItem, skipItem, getTask, updateTask, deleteTask } from './tasks-model.js?v=2.6.3';
+import { openEditor } from './tasks-editor.js?v=2.6.3';
+import { nextBirthday } from './birthdays-model.js?v=2.6.3';
+import { suggestionsHtml, slotChip } from './assistant-suggest.js?v=2.6.3';
+import { allPurchases } from './shop-view.js?v=2.6.3';
+import { markDay } from './flags-view.js?v=2.6.3';
+import { bookingOptions, ruleFor, planFor, comboDays, apptMoveOptions, apptWhyNot, apptGap } from './core-booking.js?v=2.6.3';
 
 export const cal = { view: 'day', day: today(), q: '' };
 
@@ -337,7 +337,7 @@ function planLinks(ds, inline = false) {
   if (inline) return out.map(([id, ic, n]) => `<button class="chip" data-act="openPlan" data-v="${id}">${ic} ${n} ›</button>`).join('');
   return out.length ? `<div class="chips sm">${out.map(([id, ic, n]) => { const k = state.tasks.filter(t => !t.archived && !t.done && t.kind === 'once' && (id === 'work' ? (t.ctx === 'work' || (!t.ctx && t.cat === 'work')) : t.ctx === id)).length; return `<button class="chip" data-act="openPlan" data-v="${id}">${ic} ${n}${k ? ' · ' + k : ''} ›</button>`; }).join('')}</div>` : '';
 }
-on('openPlan', d => import('./work-view.js').then(w => { w.setCtx(d.v); window.app.go('work'); }));
+on('openPlan', d => import('./work-view.js?v=2.6.3').then(w => { w.setCtx(d.v); window.app.go('work'); }));
 
 /** Почему завтра нет среди вариантов переноса — чтобы не гадать. */
 function tomorrowWhy(t, ds, slots) {

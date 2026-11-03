@@ -2,7 +2,7 @@
 //
 // cond = { op: 'and' | 'or', items: [ {flag:'h_works'}, {flag:'cycle', not:true}, {op:'or', items:[...]} ] }
 // Пустое условие (null или нет items) — задача ставится всегда.
-import { flagsOf, flagType } from './core-flags.js';
+import { flagsOf, flagType } from './core-flags.js?v=2.6.3';
 
 export function evalCond(cond, ds) {
   if (!cond || !cond.items || !cond.items.length) return true;

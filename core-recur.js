@@ -12,8 +12,8 @@
 // }
 // 'days'  — каждые N дней от даты начала;
 // 'after' — через N дней после последнего выполнения (процедуры, врачи).
-import { D, addDays, diffDays, isoWeek, weekStart, daysInMonth, addMonths, wd } from './core-dates.js';
-import { isWorkday } from './core-prodcal.js';
+import { D, addDays, diffDays, isoWeek, weekStart, daysInMonth, addMonths, wd } from './core-dates.js?v=2.6.3';
+import { isWorkday } from './core-prodcal.js?v=2.6.3';
 
 export function matchesRule(task, ds) {
   const r = task.rule || {}, start = task.date;

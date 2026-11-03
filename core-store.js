@@ -1,10 +1,10 @@
 // Хранилище. Все данные живут в памяти (объект state) и сохраняются в IndexedDB телефона.
 // Если IndexedDB недоступна (редкие браузеры, приватный режим) — запасной вариант localStorage.
 // Сервера нет: данные никуда не отправляются. Перенос между устройствами — копией (exportAll/importAll).
-import { today } from './core-dates.js';
-import { DEFAULT_FLAG_TYPES } from './core-flags.js';
-import { DEFAULT_OCCASIONS } from './holidays-model.js';
-import { seedTasks, extraTasks, DAUGHTER_WK_COND, ZONES, BEAUTY_RE } from './core-seed.js';
+import { today } from './core-dates.js?v=2.6.3';
+import { DEFAULT_FLAG_TYPES } from './core-flags.js?v=2.6.3';
+import { DEFAULT_OCCASIONS } from './holidays-model.js?v=2.6.3';
+import { seedTasks, extraTasks, DAUGHTER_WK_COND, ZONES, BEAUTY_RE } from './core-seed.js?v=2.6.3';
 
 const DB_NAME = 'ezhednevnik';
 const KEY = 'state-v2';

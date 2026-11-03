@@ -1,11 +1,11 @@
 // Редактор задачи: тип, дата/период, время, конструктор повторений, конструктор условий, матрица приоритета.
-import { state } from './core-store.js';
-import { esc, openSheet, closeSheet, toast } from './ui.js';
-import { CATS } from './core-seed.js';
-import { KINDS, newTask, addTask, updateTask, deleteTask, getTask } from './tasks-model.js';
-import { describeRule } from './core-recur.js';
-import { describeCond } from './core-cond.js';
-import { WDS, today, D } from './core-dates.js';
+import { state } from './core-store.js?v=2.6.3';
+import { esc, openSheet, closeSheet, toast } from './ui.js?v=2.6.3';
+import { CATS } from './core-seed.js?v=2.6.3';
+import { KINDS, newTask, addTask, updateTask, deleteTask, getTask } from './tasks-model.js?v=2.6.3';
+import { describeRule } from './core-recur.js?v=2.6.3';
+import { describeCond } from './core-cond.js?v=2.6.3';
+import { WDS, today, D } from './core-dates.js?v=2.6.3';
 
 export const QUADS = [
   { id: 'q1', name: 'Сделать сейчас', ax: 'важно и срочно', imp: true, urg: true, c: 'var(--danger)' },

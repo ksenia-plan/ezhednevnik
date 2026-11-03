@@ -1,6 +1,6 @@
 // Вкладка «Зарядка»: три комплекса по 20 минут — пример ещё одного модуля на общем движке.
-import { esc, on } from './ui.js';
-import { today, D } from './core-dates.js';
+import { esc, on } from './ui.js?v=2.6.3';
+import { today, D } from './core-dates.js?v=2.6.3';
 
 export const id = 'exercise';
 export const name = 'Зарядка';

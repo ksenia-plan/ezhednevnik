@@ -3,13 +3,13 @@
 // Дело без даты в «Даче» само встаёт на ближайший день дачи (то же для отпуска и больничного).
 // Для работы — ещё «Встречи»: запись голосом, расшифровка, мемо и задачи из встречи.
 // Голос — Web Speech API браузера (распознаёт сервер Google или Яндекса, нужен интернет). Claude из приложения не вызывается.
-import { state, commit, uid } from './core-store.js';
-import { esc, on, toast, enableDrag, openSheet, closeSheet, copyText } from './ui.js';
-import { today, addDays, fmtDay, WDS, D, durTxt } from './core-dates.js';
-import { parseText, addTask, updateTask, getTask, setDone, moveItem, deleteTask, newTask } from './tasks-model.js';
-import { QUADS, quadOf, openEditor } from './tasks-editor.js';
-import { itemSheet } from './calendar-view.js';
-import { nextFlagDay, planDate } from './core-occur.js';
+import { state, commit, uid } from './core-store.js?v=2.6.3';
+import { esc, on, toast, enableDrag, openSheet, closeSheet, copyText } from './ui.js?v=2.6.3';
+import { today, addDays, fmtDay, WDS, D, durTxt } from './core-dates.js?v=2.6.3';
+import { parseText, addTask, updateTask, getTask, setDone, moveItem, deleteTask, newTask } from './tasks-model.js?v=2.6.3';
+import { QUADS, quadOf, openEditor } from './tasks-editor.js?v=2.6.3';
+import { itemSheet } from './calendar-view.js?v=2.6.3';
+import { nextFlagDay, planDate } from './core-occur.js?v=2.6.3';
 
 export const CTX = [
   { id: 'work', name: 'Работа', icon: '💼', cat: 'work', hint: 'рабочие дела, встречи и мемо' },

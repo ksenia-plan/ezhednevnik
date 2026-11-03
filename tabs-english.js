@@ -1,8 +1,8 @@
 // Вкладка «Английский»: задание на день, отметка, история и серия дней подряд.
 // Задания можно пополнять из чата с Claude через вкладку «Для Claude» (операция addEnglish).
-import { state, commit } from './core-store.js';
-import { esc, on, toast } from './ui.js';
-import { today, addDays, diffDays, fmtDay } from './core-dates.js';
+import { state, commit } from './core-store.js?v=2.6.3';
+import { esc, on, toast } from './ui.js?v=2.6.3';
+import { today, addDays, diffDays, fmtDay } from './core-dates.js?v=2.6.3';
 
 export const id = 'english';
 export const name = 'Английский';
