@@ -1,6 +1,6 @@
 // Офлайн-режим: все файлы приложения сохраняются в телефоне при первом запуске.
 // Сеть с ограничением 3 секунды: если сеть медленная или её нет — берётся сохранённая копия.
-const CACHE = 'ezh-2.6.0';
+const CACHE = 'ezh-2.6.1';
 const FILES = ["./", "./index.html", "./styles.css", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png", "./app.js", "./assistant-evening.js", "./assistant-suggest.js", "./birthdays-model.js", "./birthdays-view.js", "./calendar-view.js", "./claude-view.js", "./core-booking.js", "./core-cond.js", "./core-dates.js", "./core-flags.js", "./core-occur.js", "./core-prodcal.js", "./core-recur.js", "./core-seed.js", "./core-store.js", "./flags-view.js", "./holidays-model.js", "./holidays-view.js", "./settings-migrate.js", "./settings-view.js", "./shop-view.js", "./tabs-english.js", "./tabs-exercise.js", "./tabs-registry.js", "./tasks-editor.js", "./tasks-model.js", "./ui.js", "./work-view.js"];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES))); self.skipWaiting(); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });

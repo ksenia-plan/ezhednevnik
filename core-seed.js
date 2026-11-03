@@ -29,15 +29,15 @@ const rep = (o) => ({ kind: 'repeat', dur: 30, createdAt: Date.now(), ...o, id: 
 export const FITNESS_COND = {
   op: 'and', items: [
     { op: 'or', items: [{ op: 'and', items: [{ flag: 'my_work' }, { op: 'or', items: [{ flag: 'h_off' }, { flag: 'h_after' }] }] }, { op: 'and', items: [{ flag: 'my_off' }, { flag: 'h_works' }] }] },
-    { flag: 'cycle', not: true }, { flag: 'dacha', not: true }, { flag: 'sick', not: true }, { flag: 'donor', not: true }
+    { flag: 'cycle', not: true }, { flag: 'dacha', not: true }, { flag: 'vac_me', not: true }, { flag: 'trip', not: true }, { flag: 'sick', not: true }, { flag: 'donor', not: true }
   ]
 };
 
 // Время с дочкой: муж на смене, не на даче; в будни — после работы, в воскресенье — днём.
-export const DAUGHTER_COND = { op: 'and', items: [{ flag: 'h_works' }, { flag: 'dacha', not: true }, { flag: 'dacha_eve', not: true }, { flag: 'sick', not: true }, { op: 'or', items: [{ flag: 'vac_me', not: true }, { flag: 'kids_hol' }, { flag: 'wknd' }] }] };
+export const DAUGHTER_COND = { op: 'and', items: [{ flag: 'h_works' }, { flag: 'dacha', not: true }, { flag: 'vac_me', not: true }, { flag: 'trip', not: true }, { flag: 'dacha_eve', not: true }, { flag: 'sick', not: true }, { op: 'or', items: [{ flag: 'vac_me', not: true }, { flag: 'kids_hol' }, { flag: 'wknd' }] }] };
 // будни: сразу после работы, когда муж на смене (не во вторник — танцы)
-export const DAUGHTER_WK_COND = { op: 'and', items: [{ flag: 'h_works' }, { flag: 'dacha', not: true }, { flag: 'dacha_eve', not: true }, { flag: 'sick', not: true }] };
-export const PADEL_COND = { op: 'and', items: [{ flag: 'my_off' }, { flag: 'h_works' }, { flag: 'dacha', not: true }, { flag: 'sick', not: true }] };
+export const DAUGHTER_WK_COND = { op: 'and', items: [{ flag: 'h_works' }, { flag: 'dacha', not: true }, { flag: 'vac_me', not: true }, { flag: 'trip', not: true }, { flag: 'dacha_eve', not: true }, { flag: 'sick', not: true }] };
+export const PADEL_COND = { op: 'and', items: [{ flag: 'my_off' }, { flag: 'h_works' }, { flag: 'dacha', not: true }, { flag: 'vac_me', not: true }, { flag: 'trip', not: true }, { flag: 'sick', not: true }] };
 export const extraTasks = t => [
   rep({ title: 'Время с дочкой', absorbs: 'Прогулка', cat: 'family', date: t, time: '18:15', timeOff: '11:00', dur: 120, durOff: 210, labelWk: 'будни', labelOff: 'выходной', colorWk: '#C2477A', colorOff: '#8E44AD', rule: { freq: 'weekly', byWd: [0, 1, 3, 4, 5], perWeek: 2, spread: true }, cond: DAUGHTER_COND, fav: true, note: 'Будни — сразу после работы, 2 ч (не во вторник — танцы). Воскресенье — 3,5 ч. В субботу у дочери школа и танцы.' }),
 ];
@@ -54,7 +54,7 @@ export function seedTasks() {
     rep({ title: 'Прогулка', flex: true, cat: 'health', date: t, time: '18:15', timeOff: '12:00', dur: 30, rule: { freq: 'daily' } }),
     rep({ title: 'Чтение книги', flex: true, cat: 'personal', date: t, time: '20:30', timeOff: '22:30', dur: 30, rule: { freq: 'daily' } }),
     rep({ title: 'Спорт', group: 'sport', cat: 'health', date: t, time: '18:15', timeOff: '09:00', dur: 90, durOff: 150, labelWk: 'фитнес', labelOff: 'выходной', colorWk: '#2E8B57', colorOff: '#2F7FD0', fav: true, note: 'Будни — фитнес 1,5 ч; выходные — падел или фитнес 2,5 ч.', rule: { freq: 'weekly', byWd: ALL, perWeek: 3, spread: false }, cond: FITNESS_COND }),
-    rep({ title: 'Уборка', flex: true, cat: 'home', date: t, time: '19:00', timeOff: '11:00', dur: 30, rotate: ZONES, rotFrom: t, note: 'По очереди: спальня → детские → общие места → глажка.', rule: { freq: 'weekly', byWd: ALL, perWeek: 3 }, cond: { op: 'and', items: [{ flag: 'dacha', not: true }, { flag: 'trip', not: true }, { flag: 'donor', not: true }] } }),
+    rep({ title: 'Уборка', flex: true, cat: 'home', date: t, time: '19:00', timeOff: '11:00', dur: 30, rotate: ZONES, rotFrom: t, note: 'По очереди: спальня → детские → общие места → глажка.', rule: { freq: 'weekly', byWd: ALL, perWeek: 3 }, cond: { op: 'and', items: [{ flag: 'dacha', not: true }, { flag: 'vac_me', not: true }, { flag: 'trip', not: true }, { flag: 'donor', not: true }] } }),
     rep({ title: 'Оплатить счета', flex: true, cat: 'money', date: t, time: '19:00', timeOff: '10:00', dur: 20, rule: { freq: 'monthly', monthMode: 'day', monthDay: 12 }, note: 'Крайний срок по закону — 15-е' }),
     rep({ title: 'Передать показания счётчиков', flex: true, cat: 'money', date: t, time: '19:00', timeOff: '10:00', dur: 15, rule: { freq: 'monthly', monthMode: 'day', monthDay: 20 }, remind: 3, note: 'Окно приёма — с 20 по 25 число' }),
     rep({ title: 'Сын: репетитор по математике', cat: 'family', date: t, time: '17:30', dur: 60, info: true, rule: { freq: 'weekly', byWd: [1] } }),

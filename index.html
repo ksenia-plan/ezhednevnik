@@ -16,7 +16,7 @@
   // Тема до загрузки — без вспышки светлого экрана
   try { var th = (JSON.parse(localStorage.getItem('theme-hint') || '""')); if (th && th !== 'auto') document.documentElement.setAttribute('data-theme', th); } catch (e) {}
   // Сторож запуска: если программа не стартовала за 8 секунд — показать понятное сообщение
-  window.__appVer = '2.6.0';
+  window.__appVer = '2.6.1';
   window.onerror = function (m, s, l, c) { window.__plannerErr = String(m) + ' @' + l + ':' + c; };
   setTimeout(function () {
     if (window.__plannerOk) return;

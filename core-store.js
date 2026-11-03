@@ -114,7 +114,7 @@ export function importAll(text) {
 }
 
 /** Обновления правил для уже сохранённых данных (без потери твоих изменений). */
-const SYS_VER = 19;
+const SYS_VER = 20;
 function upgrade() {
   if ((state.meta.sysVer || 0) >= SYS_VER) return false;
   // 1) выезд на дачу вечером после работы, если завтра дача, а муж выходной
@@ -200,6 +200,12 @@ function upgrade() {
   }
   // 19) праздники и поводы
   if (!state.meta.occasions) state.meta.occasions = JSON.parse(JSON.stringify(DEFAULT_OCCASIONS));
+  // 20) отпуск и поездка — как дача: дела, которые не ставятся на даче (спорт, время с дочкой, уборка…), не ставятся и в эти дни
+  if ((state.meta.sysVer || 0) < 20) for (const t of state.tasks) {
+    const top = t.cond && t.cond.op === 'and' && t.cond.items;
+    if (!top || !top.some(x => x.flag === 'dacha' && x.not)) continue;
+    for (const f of ['vac_me', 'trip']) if (!top.some(x => x.flag === f && x.not)) top.push({ flag: f, not: true });
+  }
   state.meta.sysVer = SYS_VER;
   return true;
 }
